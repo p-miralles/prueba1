@@ -5,8 +5,7 @@
 #include <Wire.h>
 #include "Adafruit_CCS811.h"
 #include "Adafruit_APDS9960.h"
-Adafruit_APDS9960 apds;
-//
+
 //WIFI y TOKEN DE DISPOSITIVO, CREAR DISPOSITIVO PRIMERO
 #define WIFI_AP "Depto 601"
 #define WIFI_PASSWORD "17930953kK"
@@ -16,7 +15,7 @@ Adafruit_APDS9960 apds;
 #define Addr_si7006 0x40
 
 //APDS
-//SparkFun_APDS9960 apds = SparkFun_APDS9960();
+Adafruit_APDS9960 apds; //Library changed Sparkfun --> Adafruit
 uint16_t ambient_light = 0;
 uint16_t red_light = 0;
 uint16_t green_light = 0;
@@ -57,7 +56,7 @@ void setup()
 
 
 //APDS-9960
-  if ( apds.begin() ) {
+  if ( apds.begin() ) {  //sparkfun library uses init, adafruit uses begin
     Serial.println(F("APDS-9960 Ok!"));
   } else {
     Serial.println(F("Error APDS-9960"));
@@ -70,15 +69,9 @@ void setup()
 //  } else {
 //    Serial.println(F("Error lectura de Luz"));
 //  }
-  if(!apds.begin()){
-    Serial.println("failed to initialize device! Please check your wiring.");
-  }
-  else Serial.println("Device initialized!");
 
   //enable color sensign mode
   apds.enableColor(true);
-
-
    
   client.setServer( thingsboardServer, 1883 );
   lastSend = 0;
@@ -103,42 +96,25 @@ void getData() {
 
 uint8_t data[2] = {0};
 
-// // Read the light levels (ambient, red, green, blue)
-//  if (  !apds.readAmbientLight(ambient_light) ||
-//        !apds.readRedLight(red_light) ||
-//        !apds.readGreenLight(green_light) ||
-//        !apds.readBlueLight(blue_light) ) {
-//    Serial.println("Error reading light values");
-//  } else {
-//    Serial.println(" ");
-//    Serial.println("================= APDS 9960 =================");
-//    Serial.print("Ambiente: ");
-//    Serial.println(ambient_light);
-//    Serial.print(" Rojo: ");
-//    Serial.println(red_light);
-//    Serial.print(" Verde: ");
-//    Serial.println(green_light);
-//    Serial.print(" Azul: ");
-//    Serial.println(blue_light);
-//  }
-
-
-  //get the data and print the different channels
- uint16_t r, g, b, c;
-  apds.getColorData(&r, &g, &b, &c);
-  Serial.print("red: ");
-  Serial.print(r);
-  
-  Serial.print(" green: ");
-  Serial.print(g);
-  
-  Serial.print(" blue: ");
-  Serial.print(b);
-  
-  Serial.print(" clear: ");
-  Serial.println(c);
-  Serial.println();
-  
+ // Read the light levels (ambient, red, green, blue)
+  //  apds.getColorData(&r, &g, &b, &c);
+  if (  !apds.readAmbientLight(ambient_light) ||
+        !apds.readRedLight(red_light) ||
+        !apds.readGreenLight(green_light) ||
+        !apds.readBlueLight(blue_light) ) {
+    Serial.println("Error reading light values");
+  } else {
+    Serial.println(" ");
+    Serial.println("================= APDS 9960 =================");
+    Serial.print("Ambiente: ");
+    Serial.println(ambient_light);
+    Serial.print(" Rojo: ");
+    Serial.println(red_light);
+    Serial.print(" Verde: ");
+    Serial.println(green_light);
+    Serial.print(" Azul: ");
+    Serial.println(blue_light);
+  }
   delay(500);
   
   //Cálculo Humedad
