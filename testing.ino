@@ -6,7 +6,7 @@
 #include "Adafruit_CCS811.h"
 #include "Adafruit_APDS9960.h"
 Adafruit_APDS9960 apds;
-
+//
 //WIFI y TOKEN DE DISPOSITIVO, CREAR DISPOSITIVO PRIMERO
 #define WIFI_AP "Depto 601"
 #define WIFI_PASSWORD "17930953kK"
